@@ -1,21 +1,14 @@
-########################################################
-# Variables
-########################################################
-
 variable "resource_group_name" {
-  description = "Resource group that contains the DNS zones"
   type        = string
+  description = "RG that contains the DNS zones"
 }
 
 variable "zones" {
-  description = "Zone names to enumerate (e.g., priv.east.contoso.local or contoso.com)"
   type        = list(string)
+  description = "Zone names to enumerate"
 }
 
-# "private" for Microsoft.Network/privateDnsZones
-# "public"  for Microsoft.Network/dnsZones
 variable "zone_kind" {
-  description = "Type of Azure DNS zone: \"private\" or \"public\""
   type        = string
   default     = "private"
   validation {
@@ -24,11 +17,6 @@ variable "zone_kind" {
   }
 }
 
-########################################################
-# Outputs
-########################################################
-
-# Simple names list (per zone)
 output "record_names_by_zone" {
   value = {
     for zone_name, records in local.zone_records :
@@ -36,18 +24,15 @@ output "record_names_by_zone" {
   }
 }
 
-# Helpful counts per zone/type
 output "record_counts_by_zone_and_type" {
   value = local.record_counts
 }
 
-# Full JSON (for deep debugging / auditing)
 output "record_details_by_zone" {
   value     = local.zone_records
   sensitive = true
 }
 
-# Debug: show zone IDs we actually queried
 output "resolved_zone_ids" {
   value = { for k, z in local.zone_map : k => z.id }
 }

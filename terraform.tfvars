@@ -6,3 +6,4 @@ zones = [
 ]
 
 
+zone_kind           = "private"

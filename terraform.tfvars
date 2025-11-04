@@ -5,4 +5,4 @@ zones = [
   "priv.central.contoso.local"
 ]
 
-a_record_names = ["api", "web", "db"]
+

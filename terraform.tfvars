@@ -1,9 +1,3 @@
-resource_group_name = "rg-network-shared"
+resource_group_name = "rg-hub-dns"
+zones               = ["priv.east.contoso.local", "priv.central.contoso.local"]
 
-zones = [
-  "priv.east.contoso.local",
-  "priv.central.contoso.local"
-]
-
-
-zone_kind           = "private"

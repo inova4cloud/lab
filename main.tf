@@ -1,20 +1,33 @@
+########################################################
+# Variables
+########################################################
+
 variable "resource_group_name" {
   type        = string
-  description = "RG that contains the Private DNS zones"
+  description = "Resource Group containing the Private DNS zones"
 }
 
 variable "zones" {
   type        = list(string)
-  description = "Private DNS zone names to enumerate"
+  description = "List of Private DNS zone names to enumerate"
 }
 
-# Final, simple outputs
+########################################################
+# Outputs
+########################################################
+
+# Simplified list of record names per zone
 output "record_names_by_zone" {
-  value = { for z, recs in local.zone_records : z => [for r in recs : r.name] }
+  description = "List of record names in each Private DNS zone"
+  value = {
+    for zone_name, records in local.zone_records :
+    zone_name => [for r in records : r.name]
+  }
 }
 
+# Full record payload (ARM JSON)
 output "record_details_by_zone" {
-  value     = local.zone_records   # full ARM JSON per record set
-  sensitive = true
+  description = "Full ARM JSON of record sets per zone"
+  value       = local.zone_records
+  sensitive   = true
 }
-

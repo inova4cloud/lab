@@ -175,6 +175,9 @@ resource "azurerm_storage_account" "logging" {
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
 
+  # Disable shared key access for security
+  shared_access_key_enabled = false
+
   # Enable blob public access for logging if needed, but generally keep private
   allow_nested_items_to_be_public = false
 
@@ -185,4 +188,10 @@ resource "azurerm_storage_account" "logging" {
     environment = "lab"
     purpose     = "logging"
   }
+}
+
+resource "azurerm_role_assignment" "monitor_storage" {
+  scope                = azurerm_storage_account.logging.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = "b86a5684-726a-4a47-9a5c-9b9e4398e2d2"  # Azure Monitor service principal
 }

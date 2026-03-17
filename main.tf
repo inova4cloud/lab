@@ -175,9 +175,6 @@ resource "azurerm_storage_account" "logging" {
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
 
-  # Disable shared key access for security
-  shared_access_key_enabled = false
-
   # Enable blob public access for logging if needed, but generally keep private
   allow_nested_items_to_be_public = false
 

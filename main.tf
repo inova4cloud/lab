@@ -99,20 +99,6 @@ resource "azurerm_lb_rule" "http" {
   probe_id                       = azurerm_lb_probe.http.id
 }
 
-resource "azurerm_monitor_diagnostic_setting" "lb_logs" {
-  name               = "${var.prefix}-lb-diagnostic-logs"
-  target_resource_id = azurerm_lb.lb.id
-  storage_account_id = azurerm_storage_account.logging.id
-
-  enabled_log {
-    category = "AllLoadBalancerProbeHealthStatus"
-  }
-
-  enabled_log {
-    category = "AllLoadBalancerAuditEvent"
-  }
-}
-
 resource "azurerm_network_interface" "nic" {
   count               = var.vm_count
   name                = "${var.prefix}-nic-${count.index}"
@@ -165,30 +151,4 @@ resource "azurerm_linux_virtual_machine" "vm" {
   custom_data = base64encode(templatefile("${path.module}/cloud-init.yaml", {
     hostname = "${var.prefix}-vm-${count.index}"
   }))
-}
-
-resource "azurerm_storage_account" "logging" {
-  name                     = "tfclablogvs"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  account_kind             = "StorageV2"
-
-  # Enable blob public access for logging if needed, but generally keep private
-  allow_nested_items_to_be_public = false
-
-  # Enable minimum TLS version
-  min_tls_version = "TLS1_2"
-
-  tags = {
-    environment = "lab"
-    purpose     = "logging"
-  }
-}
-
-resource "azurerm_role_assignment" "monitor_storage" {
-  scope                = azurerm_storage_account.logging.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = "b86a5684-726a-4a47-9a5c-9b9e4398e2d2"  # Azure Monitor service principal
 }

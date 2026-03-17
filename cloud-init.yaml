@@ -1,0 +1,9 @@
+#cloud-config
+hostname: ${hostname}
+package_update: true
+packages:
+  - nginx
+runcmd:
+  - bash -lc 'echo "Hello from ${hostname}" > /var/www/html/index.html'
+  - systemctl enable nginx
+  - systemctl restart nginx

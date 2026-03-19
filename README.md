@@ -1,52 +1,102 @@
-# Terraform Repository for Multiple Projects
+# Terraform Multi-Project Lab Repository
 
-This repository is organized to manage multiple Terraform projects that share the same Azure environment and backend configuration.
+This repository contains multiple Terraform lab projects that share the same Azure environment model and common provider/backend templates.
 
-## Structure
+## Repository Layout
 
-- `shared/`: Contains common configurations shared across projects.
-  - `backend.tf`: Terraform backend configuration (remote in Terraform Cloud).
-  - `providers.tf`: Azure provider configuration.
+```text
+.
+├── shared/
+│   ├── backend.tf
+│   └── providers.tf
+└── lab/
+   ├── 01/
+   └── 02/
+```
 
-- `lab/`: Directory for individual projects.
-  - `01/`: Lab project deploying a load-balanced set of Linux VMs in Azure with network security groups.
-    - **Resources**: Resource Group, Virtual Network, Subnet, Network Security Group, Public IP, Load Balancer (with backend pool, probe, and rules), Network Interfaces, and Linux Virtual Machines (configurable count).
-    - `main.tf`: Main Terraform configuration.
-    - `outputs.tf`: Output definitions.
-    - `variables.tf`: Project-specific variables (overrides shared).
-    - `terraform.tfvars`: Variable values.
-    - `cloud-init.yaml`: Cloud-init configuration for VMs.
-    - `backend.tf`: Backend config (same as shared).
-    - `providers.tf`: Provider config (same as shared).
-  - `02/`: Lab project deploying an Azure Linux Web App.
-    - **Resources**: Resource Group, App Service Plan (`azurerm_service_plan`), Linux Web App (`azurerm_linux_web_app`), Virtual Network, Private Endpoint, Private DNS Zone (`privatelink.azurewebsites.net`), Azure Bastion Host, and a private jumpbox VM for in-VNet testing.
-    - **Note**: Use a different Terraform Cloud workspace in `backend.tf` before applying to avoid state conflicts with `01/`.
+### shared/
 
-## Usage
+- `backend.tf`: Terraform Cloud backend template.
+- `providers.tf`: Shared Azure provider configuration.
 
-To work on a project, navigate to its directory (e.g., `cd lab/01` or `cd lab/02`) and run Terraform commands.
+### lab/01/
 
-### lab/02 private testing flow
+Purpose:
+Deploy a VM-based lab behind a load balancer.
+
+Main resources:
+- Resource Group
+- Virtual Network and Subnet
+- Network Security Group
+- Public IP and Load Balancer
+- Network Interfaces
+- Linux Virtual Machines
+
+Project files:
+- `main.tf`
+- `variables.tf`
+- `terraform.tfvars`
+- `outputs.tf`
+- `cloud-init.yaml`
+- `backend.tf`
+- `providers.tf`
+
+### lab/02/
+
+Purpose:
+Deploy a private Linux Web App test environment with private connectivity validation.
+
+Main resources:
+- Resource Group
+- App Service Plan
+- Linux Web App
+- Virtual Network and Subnets
+- Private Endpoint
+- Private DNS Zone (`privatelink.azurewebsites.net`)
+- Azure Bastion Host
+- Private jumpbox VM for in-VNet testing
+
+Project files:
+- `main.tf`
+- `variables.tf`
+- `terraform.tfvars`
+- `terraform.tfvars.example`
+- `outputs.tf`
+- `backend.tf`
+- `providers.tf`
+
+## Working with a Project
+
+1. Change directory to the project folder:
+  - `cd lab/01`
+  - `cd lab/02`
+2. Initialize Terraform:
+  - `terraform init -reconfigure`
+3. Validate and review changes:
+  - `terraform validate`
+  - `terraform plan`
+4. Apply changes:
+  - `terraform apply -auto-approve`
+
+## lab/02 Private Web App Test Flow
 
 1. Apply Terraform in `lab/02`.
-2. Connect to the jumpbox VM through Azure Bastion.
-3. From the jumpbox, test private DNS resolution and web app access:
+2. Open Azure Bastion and connect to the jumpbox VM.
+3. From the jumpbox, verify DNS and HTTP reachability:
   - `nslookup <webapp-name>.azurewebsites.net`
   - `curl -I https://<webapp-name>.azurewebsites.net`
-4. Confirm the hostname resolves to a private IP from the VNet private endpoint path.
+4. Confirm the hostname resolves to a private endpoint IP.
 
-For new projects:
-1. Create a new directory under `lab/` (e.g., `lab/02`).
-2. Copy `backend.tf` and `providers.tf` from `shared/` to the new project directory.
-3. Add a project-specific `variables.tf` and `terraform.tfvars` as needed.
-4. Create `main.tf` and other files for the project.
-5. Update the workspace name in `backend.tf` for the new project.
-6. Run `terraform init -reconfigure` in the new project directory.
+## Creating a New Lab Project
 
-## Shared Backend
+1. Create a new folder under `lab/` (for example, `lab/03`).
+2. Copy `backend.tf` and `providers.tf` from `shared/`.
+3. Add project-specific `main.tf`, `variables.tf`, `terraform.tfvars`, and `outputs.tf`.
+4. Set a unique Terraform Cloud workspace in the project `backend.tf`.
+5. Run `terraform init -reconfigure` in the new project folder.
 
-All projects use the same Terraform Cloud organization ("inova7cloud"). Each project should have its own workspace to avoid state conflicts.
+## Backend and Azure Scope
 
-## Shared Azure Environment
-
-All projects use the same Azure subscription and provider configuration.
+- Terraform Cloud organization: `inova7cloud`
+- Recommendation: use one workspace per project to avoid state conflicts.
+- Azure provider context is shared, but resources are isolated by each project's naming and state.

@@ -1,7 +1,12 @@
 variable "prefix" {
   type        = string
-  description = "Lab name prefix for resources/groups"
-  default     = "lab-02"
+  description = "Short prefix used in resource names (max 2 chars to keep names under 15 chars)"
+  default     = "02"
+
+  validation {
+    condition     = length(var.prefix) <= 2
+    error_message = "prefix must be 2 characters or fewer to keep generated resource names under 15 characters."
+  }
 }
 
 variable "location" {
@@ -46,10 +51,22 @@ variable "jumpbox_vm_size" {
   default     = "Standard_B1ms"
 }
 
+variable "jumpbox_image_sku" {
+  type        = string
+  description = "Windows Server image SKU for jumpbox"
+  default     = "2022-datacenter"
+}
+
 variable "jumpbox_admin_username" {
   type        = string
   description = "Admin username for jumpbox VM"
   default     = "azureuser"
+}
+
+variable "jumpbox_admin_password" {
+  type        = string
+  description = "Admin password for Windows jumpbox VM"
+  sensitive   = true
 }
 
 variable "webapp_public_access_enabled" {

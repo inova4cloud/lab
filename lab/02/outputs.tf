@@ -26,7 +26,6 @@ output "jumpbox_admin_username" {
   value = var.jumpbox_admin_username
 }
 
-output "jumpbox_ssh_private_key_pem" {
-  value     = tls_private_key.jumpbox.private_key_pem
-  sensitive = true
+output "jumpbox_os_type" {
+  value = "windows"
 }

@@ -83,11 +83,6 @@ resource "azurerm_bastion_host" "this" {
   }
 }
 
-resource "tls_private_key" "jumpbox" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
 resource "azurerm_network_interface" "jumpbox" {
   name                = "${var.prefix}-jumpbox-nic"
   location            = azurerm_resource_group.rg.location
@@ -104,19 +99,15 @@ resource "azurerm_network_interface" "jumpbox" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "jumpbox" {
+resource "azurerm_windows_virtual_machine" "jumpbox" {
   name                = "${var.prefix}-jumpbox-vm"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   size                = var.jumpbox_vm_size
   admin_username      = var.jumpbox_admin_username
+  admin_password      = var.jumpbox_admin_password
 
   network_interface_ids = [azurerm_network_interface.jumpbox.id]
-
-  admin_ssh_key {
-    username   = var.jumpbox_admin_username
-    public_key = tls_private_key.jumpbox.public_key_openssh
-  }
 
   os_disk {
     caching              = "ReadWrite"
@@ -124,9 +115,9 @@ resource "azurerm_linux_virtual_machine" "jumpbox" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = var.jumpbox_image_sku
     version   = "latest"
   }
 
@@ -172,7 +163,7 @@ resource "azurerm_private_dns_zone" "webapp" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "webapp" {
-  name                  = "${var.prefix}-webapp-dnslink"
+  name                  = "${var.prefix}-dnsl"
   resource_group_name   = azurerm_resource_group.rg.name
   private_dns_zone_name = azurerm_private_dns_zone.webapp.name
   virtual_network_id    = azurerm_virtual_network.vnet.id
@@ -185,14 +176,14 @@ resource "azurerm_private_endpoint" "webapp" {
   subnet_id           = azurerm_subnet.private_endpoint.id
 
   private_service_connection {
-    name                           = "${var.prefix}-webapp-psc"
+    name                           = "${var.prefix}-psc"
     private_connection_resource_id = azurerm_linux_web_app.app.id
     is_manual_connection           = false
     subresource_names              = ["sites"]
   }
 
   private_dns_zone_group {
-    name                 = "webapp-dns-zone-group"
+    name                 = "${var.prefix}-dnsg"
     private_dns_zone_ids = [azurerm_private_dns_zone.webapp.id]
   }
 

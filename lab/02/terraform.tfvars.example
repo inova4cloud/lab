@@ -1,5 +1,5 @@
 # Core settings
-prefix   = "lab-02"
+prefix   = "l2"
 location = "westus2"
 
 # App Service plan SKU (B1, S1, P1v3, ...)
@@ -13,7 +13,9 @@ jumpbox_subnet_cidr          = "10.20.3.0/24"
 
 # Jumpbox settings (used with Azure Bastion to test private web app access)
 jumpbox_vm_size              = "Standard_B1ms"
+jumpbox_image_sku            = "2022-datacenter"
 jumpbox_admin_username       = "azureuser"
+jumpbox_admin_password       = "ChangeMe-StrongPassword-123!"
 
 # Set to false for private-only access through private endpoint + private DNS.
 webapp_public_access_enabled = false

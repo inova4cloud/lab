@@ -1,0 +1,13 @@
+# Core settings
+prefix   = "lab-02"
+location = "westus2"
+
+# App Service plan SKU (B1, S1, P1v3, ...)
+app_service_sku_name = "B1"
+
+# Private networking settings for Web App
+vnet_address_space           = "10.20.0.0/16"
+private_endpoint_subnet_cidr = "10.20.1.0/24"
+
+# Set to false for private-only access through private endpoint + private DNS.
+webapp_public_access_enabled = false

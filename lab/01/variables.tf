@@ -1,7 +1,7 @@
 variable "prefix" {
   type        = string
   description = "Name prefix for resources"
-  default     = "tfc-lab"
+  default     = "tfc-lab-01"
 }
 
 variable "location" {

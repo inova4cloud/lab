@@ -84,7 +84,8 @@ resource "azurerm_bastion_host" "this" {
 }
 
 resource "tls_private_key" "jumpbox" {
-  algorithm = "ED25519"
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
 resource "azurerm_network_interface" "jumpbox" {

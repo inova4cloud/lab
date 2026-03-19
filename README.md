@@ -18,17 +18,21 @@ This repository is organized to manage multiple Terraform projects that share th
     - `cloud-init.yaml`: Cloud-init configuration for VMs.
     - `backend.tf`: Backend config (same as shared).
     - `providers.tf`: Provider config (same as shared).
+  - `02/`: Lab project deploying an Azure Linux Web App.
+    - **Resources**: Resource Group, App Service Plan (`azurerm_service_plan`), and Linux Web App (`azurerm_linux_web_app`).
+    - **Note**: Use a different Terraform Cloud workspace in `backend.tf` before applying to avoid state conflicts with `01/`.
 
 ## Usage
 
-To work on a project, navigate to its directory (e.g., `cd lab/01`) and run Terraform commands.
+To work on a project, navigate to its directory (e.g., `cd lab/01` or `cd lab/02`) and run Terraform commands.
 
 For new projects:
 1. Create a new directory under `lab/` (e.g., `lab/02`).
-2. Copy `backend.tf`, `providers.tf`, and `variables.tf` from `shared/` to the new project directory.
-3. Customize `variables.tf` and `terraform.tfvars` as needed.
+2. Copy `backend.tf` and `providers.tf` from `shared/` to the new project directory.
+3. Add a project-specific `variables.tf` and `terraform.tfvars` as needed.
 4. Create `main.tf` and other files for the project.
 5. Update the workspace name in `backend.tf` for the new project.
+6. Run `terraform init -reconfigure` in the new project directory.
 
 ## Shared Backend
 

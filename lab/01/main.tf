@@ -1,15 +1,18 @@
 
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.rg_name
+  name     = "${var.prefix}-rg"
   location = var.location
 
   tags = {
-    lab = "01"
+    env = "${var.prefix}-vnet"
   }
 }
 
 resource "azurerm_virtual_network" "vnet" {
+    tags = {
+      env = "${var.prefix}-vnet"
+    }
   name                = "${var.prefix}-vnet"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -24,6 +27,9 @@ resource "azurerm_subnet" "subnet" {
 }
 
 resource "azurerm_network_security_group" "nsg" {
+    tags = {
+      env = "${var.prefix}-vnet"
+    }
   name                = "${var.prefix}-nsg"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -61,6 +67,9 @@ resource "azurerm_subnet_network_security_group_association" "subnet_assoc" {
 }
 
 resource "azurerm_public_ip" "lb_pip" {
+    tags = {
+      env = "${var.prefix}-vnet"
+    }
   name                = "${var.prefix}-lb-pip"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -69,6 +78,9 @@ resource "azurerm_public_ip" "lb_pip" {
 }
 
 resource "azurerm_lb" "lb" {
+    tags = {
+      env = "${var.prefix}-vnet"
+    }
   name                = "${var.prefix}-lb"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -104,6 +116,9 @@ resource "azurerm_lb_rule" "http" {
 }
 
 resource "azurerm_network_interface" "nic" {
+    tags = {
+      env = "${var.prefix}-vnet"
+    }
   count               = var.vm_count
   name                = "${var.prefix}-nic-${count.index}"
   location            = azurerm_resource_group.rg.location

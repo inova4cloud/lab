@@ -1,19 +1,13 @@
 variable "prefix" {
   type        = string
-  description = "Name prefix for resources"
-  default     = "tfc-lab-01"
+  description = "Lab name prefix for resources/groups"
+  default     = "lab-01"
 }
 
 variable "location" {
   type        = string
   description = "Azure region"
   default     = "westus2"
-}
-
-variable "rg_name" {
-  type        = string
-  description = "Resource group name"
-  default     = "rg-tfc-lab"
 }
 
 variable "vm_count" {

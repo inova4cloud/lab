@@ -13,3 +13,20 @@ output "private_dns_zone_name" {
 output "private_endpoint_name" {
   value = azurerm_private_endpoint.webapp.name
 }
+
+output "bastion_host_name" {
+  value = azurerm_bastion_host.this.name
+}
+
+output "jumpbox_private_ip" {
+  value = azurerm_network_interface.jumpbox.private_ip_address
+}
+
+output "jumpbox_admin_username" {
+  value = var.jumpbox_admin_username
+}
+
+output "jumpbox_ssh_private_key_pem" {
+  value     = tls_private_key.jumpbox.private_key_pem
+  sensitive = true
+}

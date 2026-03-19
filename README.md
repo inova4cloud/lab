@@ -19,12 +19,21 @@ This repository is organized to manage multiple Terraform projects that share th
     - `backend.tf`: Backend config (same as shared).
     - `providers.tf`: Provider config (same as shared).
   - `02/`: Lab project deploying an Azure Linux Web App.
-    - **Resources**: Resource Group, App Service Plan (`azurerm_service_plan`), and Linux Web App (`azurerm_linux_web_app`).
+    - **Resources**: Resource Group, App Service Plan (`azurerm_service_plan`), Linux Web App (`azurerm_linux_web_app`), Virtual Network, Private Endpoint, Private DNS Zone (`privatelink.azurewebsites.net`), Azure Bastion Host, and a private jumpbox VM for in-VNet testing.
     - **Note**: Use a different Terraform Cloud workspace in `backend.tf` before applying to avoid state conflicts with `01/`.
 
 ## Usage
 
 To work on a project, navigate to its directory (e.g., `cd lab/01` or `cd lab/02`) and run Terraform commands.
+
+### lab/02 private testing flow
+
+1. Apply Terraform in `lab/02`.
+2. Connect to the jumpbox VM through Azure Bastion.
+3. From the jumpbox, test private DNS resolution and web app access:
+  - `nslookup <webapp-name>.azurewebsites.net`
+  - `curl -I https://<webapp-name>.azurewebsites.net`
+4. Confirm the hostname resolves to a private IP from the VNet private endpoint path.
 
 For new projects:
 1. Create a new directory under `lab/` (e.g., `lab/02`).

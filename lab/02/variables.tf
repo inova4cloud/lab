@@ -28,6 +28,30 @@ variable "private_endpoint_subnet_cidr" {
   default     = "10.20.1.0/24"
 }
 
+variable "bastion_subnet_cidr" {
+  type        = string
+  description = "Subnet CIDR for Azure Bastion subnet (must be /26 or larger)"
+  default     = "10.20.2.0/26"
+}
+
+variable "jumpbox_subnet_cidr" {
+  type        = string
+  description = "Subnet CIDR for jumpbox VM used to test private web app access"
+  default     = "10.20.3.0/24"
+}
+
+variable "jumpbox_vm_size" {
+  type        = string
+  description = "VM size for jumpbox"
+  default     = "Standard_B1ms"
+}
+
+variable "jumpbox_admin_username" {
+  type        = string
+  description = "Admin username for jumpbox VM"
+  default     = "azureuser"
+}
+
 variable "webapp_public_access_enabled" {
   type        = bool
   description = "Enable or disable public network access to the web app"

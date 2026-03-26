@@ -10,9 +10,9 @@ This repository contains multiple Terraform lab projects that share the same Azu
 │   ├── backend.tf
 │   └── providers.tf
 └── lab/
-   ├── 01/
-  ├── 02/
-  └── 03/
+    ├── 01/
+    ├── 02/
+    └── 03/
 ```
 
 ### shared/
@@ -69,12 +69,19 @@ Project files:
 ### lab/03/
 
 Purpose:
-Deploy a Python Hello World demo on Azure App Service.
+Deploy a Python Hello World demo on Azure App Service backed by Azure SQL Database.
 
 Main resources:
 - Resource Group
 - App Service Plan
 - Linux Web App (Python)
+- Azure SQL Server
+- Azure SQL Database
+- SQL firewall rule for Azure services
+
+Authentication model:
+- Azure SQL is configured with Microsoft Entra admin.
+- Entra-only SQL authentication is enabled.
 
 Project files:
 - `main.tf`
@@ -85,6 +92,11 @@ Project files:
 - `backend.tf`
 - `providers.tf`
 - `app/`
+
+Required tfvars for lab/03:
+- `sql_entra_admin_login`
+- `sql_entra_admin_object_id`
+- `sql_entra_admin_tenant_id` (optional; defaults to current tenant)
 
 ## Working with a Project
 
@@ -108,6 +120,13 @@ Project files:
   - `nslookup <webapp-name>.azurewebsites.net`
   - `curl -I https://<webapp-name>.azurewebsites.net`
 4. Confirm the hostname resolves to a private endpoint IP.
+
+## lab/03 SQL MOTD Flow
+
+1. Apply Terraform in `lab/03`.
+2. Deploy the Python app package from `lab/03/app`.
+3. Open the app URL from Terraform outputs.
+4. The app initializes table `dbo.motd` if missing, seeds one row if empty, and returns the latest message.
 
 ## Creating a New Lab Project
 

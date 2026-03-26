@@ -11,7 +11,8 @@ This repository contains multiple Terraform lab projects that share the same Azu
 │   └── providers.tf
 └── lab/
    ├── 01/
-   └── 02/
+  ├── 02/
+  └── 03/
 ```
 
 ### shared/
@@ -65,11 +66,32 @@ Project files:
 - `backend.tf`
 - `providers.tf`
 
+### lab/03/
+
+Purpose:
+Deploy a Python Hello World demo on Azure App Service.
+
+Main resources:
+- Resource Group
+- App Service Plan
+- Linux Web App (Python)
+
+Project files:
+- `main.tf`
+- `variables.tf`
+- `terraform.tfvars`
+- `terraform.tfvars.example`
+- `outputs.tf`
+- `backend.tf`
+- `providers.tf`
+- `app/`
+
 ## Working with a Project
 
 1. Change directory to the project folder:
   - `cd lab/01`
   - `cd lab/02`
+  - `cd lab/03`
 2. Initialize Terraform:
   - `terraform init -reconfigure`
 3. Validate and review changes:

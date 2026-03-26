@@ -12,7 +12,7 @@ variable "prefix" {
 variable "location" {
   type        = string
   description = "Azure region"
-  default     = "westus2"
+  default     = "centralus"
 }
 
 variable "app_service_sku_name" {

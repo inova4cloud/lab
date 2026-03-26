@@ -1,0 +1,8 @@
+prefix               = "l4"
+location             = "centralus"
+app_service_sku_name = "B1"
+python_version       = "3.11"
+app_name_suffix      = "pyhello"
+appgw_capacity       = 1
+appgw_ssl_cert_base64   = "<base64-encoded-pfx>"
+appgw_ssl_cert_password = "<pfx-password>"

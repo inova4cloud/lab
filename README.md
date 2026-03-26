@@ -12,7 +12,8 @@ This repository contains multiple Terraform lab projects that share the same Azu
 └── lab/
     ├── 01/
     ├── 02/
-    └── 03/
+    ├── 03/
+    └── 04/
 ```
 
 ### shared/
@@ -98,12 +99,41 @@ Required tfvars for lab/03:
 - `sql_entra_admin_object_id`
 - `sql_entra_admin_tenant_id` (optional; defaults to current tenant)
 
+### lab/04/
+
+Purpose:
+Deploy a Python Hello World app on Azure App Service and publish it through Azure Application Gateway.
+
+Main resources:
+- Resource Group
+- App Service Plan
+- Linux Web App (Python)
+- Virtual Network and subnet dedicated to Application Gateway
+- Public IP
+- Azure Application Gateway (Standard_v2)
+- HTTPS listener with certificate and HTTP-to-HTTPS redirect
+
+Project files:
+- `main.tf`
+- `variables.tf`
+- `terraform.tfvars`
+- `terraform.tfvars.example`
+- `outputs.tf`
+- `backend.tf`
+- `providers.tf`
+- `app/`
+
+Required tfvars for lab/04:
+- `appgw_ssl_cert_base64`
+- `appgw_ssl_cert_password`
+
 ## Working with a Project
 
 1. Change directory to the project folder:
   - `cd lab/01`
   - `cd lab/02`
   - `cd lab/03`
+  - `cd lab/04`
 2. Initialize Terraform:
   - `terraform init -reconfigure`
 3. Validate and review changes:
@@ -128,9 +158,17 @@ Required tfvars for lab/03:
 3. Open the app URL from Terraform outputs.
 4. The app initializes table `dbo.motd` if missing, seeds one row if empty, and returns the latest message.
 
+## lab/04 Application Gateway Flow
+
+1. Apply Terraform in `lab/04`.
+2. Deploy the Python app package from `lab/04/app`.
+3. Open `webapp_url` and `app_gateway_url` outputs.
+4. Confirm `http://<app-gateway-ip>` redirects to `https://<app-gateway-ip>`.
+5. Confirm the HTTPS endpoint returns the Hello World response.
+
 ## Creating a New Lab Project
 
-1. Create a new folder under `lab/` (for example, `lab/03`).
+1. Create a new folder under `lab/` (for example, `lab/04`).
 2. Copy `backend.tf` and `providers.tf` from `shared/`.
 3. Add project-specific `main.tf`, `variables.tf`, `terraform.tfvars`, and `outputs.tf`.
 4. Set a unique Terraform Cloud workspace in the project `backend.tf`.
